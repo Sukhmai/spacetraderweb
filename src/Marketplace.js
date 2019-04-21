@@ -136,6 +136,7 @@ class Marketplace extends Component {
             <span className="spans"> Credits: {this.props.player.credits} </span>
             Cargo: {this.props.player.cargo.length +"/"+5}
           </div>
+          <Button variant="contained" onClick={() => this.props.changeScreen("Travel")} color="secondary"className="Back"> Back </Button>
         </center>
         </div>
       </center>

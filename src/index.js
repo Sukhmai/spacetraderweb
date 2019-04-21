@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Marketplace from './Marketplace';
+import Travel from './Travel';
 
 
 class Index extends Component {
@@ -84,9 +85,15 @@ class Index extends Component {
 
   startGame() {
     this.setState({
-      screen: "Marketplace"
+      screen: "Travel"
     })
     this.setTechLevel();
+  }
+
+  changeScreen(newScreen) {
+    this.setState({
+      screen: newScreen
+    });
   }
 
   render() {
@@ -101,6 +108,13 @@ class Index extends Component {
           techLevel={this.state.techLevel}
           addItem={(item, credits) => this.addItem(item, credits)}
           sellItem={(item, credits) => this.removeItem(item, credits)}
+          changeScreen={(newScreen) => this.changeScreen(newScreen)}
+        />
+      )
+    } else if (this.state.screen === "Travel") {
+      return (
+        <Travel
+          changeScreen={(newScreen) => this.changeScreen(newScreen)}
         />
       )
     }
