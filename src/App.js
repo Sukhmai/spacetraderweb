@@ -27,7 +27,6 @@ class App extends Component {
     for (var i = 0; i < this.state.skills.length; i++) {
       totalSkills += parseInt(this.state.skills[i], 10);
     }
-    console.log(totalSkills);
     if (totalSkills === 16) {
       this.props.startGame();
     } else {
@@ -109,7 +108,7 @@ class App extends Component {
           <DialogTitle id="alert-dialog-title">{"Error"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You must allocate exactly 16 credits!
+              You must allocate 16 credits
             </DialogContentText>
           </DialogContent>
           <DialogActions>

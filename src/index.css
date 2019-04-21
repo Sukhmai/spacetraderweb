@@ -12,3 +12,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.items {
+  margin: 40px;
+}
+
+.spans {
+  margin: 20px;
+}
+
+.marketButtons {
+  width: 200px;
+  padding: 20px;
+}
+
+.Marketplace {
+  width: 40%;
+}
