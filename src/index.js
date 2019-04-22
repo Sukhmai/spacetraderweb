@@ -254,9 +254,7 @@ class Index extends Component {
     let player = this.state.player;
     player.cargo.pop(item);
     player.credits = player.credits + credits;
-    this.setState({
-      player: player
-    });
+    this.updatePlayer(player);
   }
 
   startGame() {
