@@ -11,17 +11,52 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import firebase from './firebase';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty : this.props.player === null ? "Beginner" : this.props.player.difficulty,
-      skills: this.props.player === null ? [0, 0, 0, 0] : this.props.player.skills,
-      name: this.props.player === null ? '' : this.props.player.name,
+        player: null,
+      difficulty : '',
+      skills: [],
+      name: '',
       open: false
     }
   }
+
+    componentDidMount() {
+        const itemsRef = firebase.database().ref('players');
+        itemsRef.on('value', (snapshot) => {
+            let players = snapshot.val();
+            let player;
+            let name = '';
+            let difficulty = 'Beginner';
+            let skills = [];
+            for (let p in players) {
+                player = {
+                    id: p,
+                    name: players[p].name,
+                    difficulty: players[p].difficulty,
+                    skills: players[p].skills,
+                    cargoSize: players[p].cargoSize,
+                    cargo: players[p].cargo,
+                    fuel: players[p].fuel,
+                    credits: players[p].credits,
+                    location: players[p].location
+                };
+                name = players[p].name;
+                difficulty = players[p].difficulty;
+                skills = players[p].skills;
+            }
+            this.setState({
+                player: player,
+                name: name,
+                difficulty: difficulty,
+                skills: skills
+            });
+        });
+    }
 
   handleStart() {
     let totalSkills = 0;
@@ -29,7 +64,11 @@ class App extends Component {
       totalSkills += parseInt(this.state.skills[i], 10);
     }
     if (totalSkills === 16) {
-        this.props.createPlayer(this.state.name, this.state.difficulty, this.state.skills);
+        if (this.state.player !== undefined) {
+            this.props.modifyPlayerDetails(this.state.name, this.state.difficulty, this.state.skills);
+        } else {
+            this.props.createPlayer(this.state.name, this.state.difficulty, this.state.skills);
+        }
         this.props.startGame();
     } else {
       this.setState({
@@ -59,26 +98,25 @@ class App extends Component {
   };
 
   render() {
-      // console.log(this.props.player.name);
     return (
       <div>
       <center>
         <div className="App">
           <h1> SpaceTrader </h1>
               <div className="fields">
-              <TextField label="Name" variant="outlined" className="textField" onChange={this.handleNameChange}/>
+              <TextField label={this.state.player === undefined ? "Name" : ''} value={this.state.name} variant="outlined" className="textField" onChange={this.handleNameChange}/>
               </div>
               <div className ="fields">
-              <TextField label="Pilot Points" variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(0, e)}/>
+              <TextField label={this.state.player === undefined ? "Pilot Points" : ''} value={this.state.skills[0]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(0, e)}/>
               </div>
               <div className ="fields">
-              <TextField label="Fighter Points" variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(1, e)}/>
+              <TextField label={this.state.player === undefined ? "Fighter Points" : ''} value={this.state.skills[1]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(1, e)}/>
               </div>
               <div className ="fields">
-              <TextField label="Trader Points" variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(2, e)}/>
+              <TextField label={this.state.player === undefined ? "Trader Points" : ''} value={this.state.skills[2]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(2, e)}/>
               </div>
               <div className ="fields">
-              <TextField label="Engineer Points" variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(3, e)}/>
+              <TextField label={this.state.player === undefined ? "Engineer Points" : ''} value={this.state.skills[3]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(3, e)}/>
               </div>
           <div>
             <FormControl component="fieldset">

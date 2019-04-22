@@ -12,7 +12,7 @@ class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        player: null,
+      player: null,
       // player: {
       //   cargoSize: 5,
       //   cargo: [{item: {
@@ -50,7 +50,6 @@ class Index extends Component {
             }
             this.setState({
               player: player,
-              location: player.location
             });
         });
     }
@@ -74,8 +73,6 @@ class Index extends Component {
     }
 
     modifyPlayer = (location) => {
-        // event.preventDefault();
-        console.log(location);
         firebase.database().ref('players/' + this.state.player.id).set({
             name: this.state.player.name,
             difficulty: this.state.player.difficulty,
@@ -85,6 +82,19 @@ class Index extends Component {
             fuel: this.state.player.fuel,
             credits: this.state.player.credits,
             location: location
+        });
+    }
+
+    modifyPlayerDetails = (name, difficulty, skills) => {
+        firebase.database().ref('players/' + this.state.player.id).set({
+            name: name,
+            difficulty: difficulty,
+            skills: skills,
+            cargoSize: this.state.player.cargoSize,
+            cargo: this.state.player.cargo !== undefined ? this.state.player.cargo : [],
+            fuel: this.state.player.fuel,
+            credits: this.state.player.credits,
+            location: this.state.player.location
         });
     }
 
@@ -146,6 +156,24 @@ class Index extends Component {
         this.setState({player: p});
     }
 
+    setName = (name) => {
+        let p = this.state.player;
+        p.name = name;
+        this.setState({player: p});
+    }
+
+    setDifficulty = (difficulty) => {
+        let p = this.state.player;
+        p.difficulty = difficulty;
+        this.setState({player: p});
+    }
+
+    setSkills = (skills) => {
+        let p = this.state.player;
+        p.skills = skills;
+        this.setState({player: p});
+    }
+
     setLocation = (location) => {
         this.setState({location: location});
         this.state.planets.forEach((element) => {
@@ -197,10 +225,12 @@ class Index extends Component {
   }
 
   render() {
-      console.log(this.state.player);
     if (this.state.screen === "App") {
       return(
-        <App startGame={() => this.startGame()} player={this.state.player} createPlayer={this.createPlayer}/>
+        <App startGame={() => this.startGame()}
+            player={this.state.player}
+            createPlayer={this.createPlayer}
+            modifyPlayerDetails={this.modifyPlayerDetails}/>
       )
     } else if (this.state.screen === "Marketplace") {
       return (

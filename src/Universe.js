@@ -72,7 +72,7 @@ class Universe extends Component {
     calculateDistance(planet) {
         let currentPlanet = null;
         this.props.planets.forEach((element) => {
-            if (element.planet.name === this.props.location) {
+            if (element.planet.name === this.props.player.location) {
                 currentPlanet = element.planet;
             }
         });
@@ -100,7 +100,7 @@ class Universe extends Component {
                         <Select options={ options } onChange={ this.handleInput }/>
                     </div>
                     <h1 />
-                    <span> Location: { this.props.location } </span>
+                    <span> Location: { this.props.player.location } </span>
                     <h1 />
                     <span> Distance: { this.state.distance }</span>
                     <h1 />

@@ -96,7 +96,6 @@ class Marketplace extends Component {
   }
 
   render() {
-      console.log(this.state.sellItem);
     return (
       <center>
         <div className="Marketplace">
