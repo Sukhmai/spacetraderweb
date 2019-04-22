@@ -18,7 +18,7 @@ class Marketplace extends Component {
   componentWillMount() {
     this.setState({
       buyItem: this.state.items[0],
-      sellItem: this.props.player.cargo !== [] ? this.props.player.cargo[0] : []
+      sellItem: this.props.player.cargo !== undefined && this.props.player.cargo.length > 0 ? this.props.player.cargo[0] : null
     });
   }
 
@@ -38,17 +38,20 @@ class Marketplace extends Component {
   }
 
   handleBuyItem() {
-    if (this.props.player.credits >= this.state.buyItem.item.price && this.props.player.cargo.length < 5) {
+    if (this.props.player.credits >= this.state.buyItem.item.price && (this.props.player.cargo === undefined || (this.props.player.cargo !== undefined && this.props.player.cargo.length < 5))) {
       this.props.addItem(this.state.buyItem, this.state.buyItem.item.price);
       let items = this.state.items;
+      let indexItem = 0;
       for (var i = 0; i < items.length; i++) {
         if (items[i] === this.state.buyItem) {
           items.splice(i, 1);
+          indexItem = items[i];
         }
       }
       this.setState({
         items: items,
-        buyItem: items[0]
+        buyItem: items[0],
+        sellItem: indexItem
       })
     }
   }
@@ -119,7 +122,7 @@ class Marketplace extends Component {
           </div>
           <div className="items">
 
-            { this.state.sellItem !== undefined ?
+            { this.state.sellItem !== null ?
                 <div>
                     <span className="spans"> Sell Items: </span> <Select
                       value = {this.state.sellItem.item.name}
@@ -141,7 +144,7 @@ class Marketplace extends Component {
           <Button className="marketButtons" variant="contained" onClick={() => this.handleSellItem()} color="primary"className="Go"> Sell Item </Button>
           <div>
             <span className="spans"> Credits: {this.props.player.credits} </span>
-            Cargo: {this.props.player.cargo.length +"/"+5}
+            Cargo: {this.props.player.cargo !== undefined && this.props.player.cargo !== [] ? this.props.player.cargo.length +"/"+5 : 0}
           </div>
           <Button variant="contained" onClick={() => this.props.changeScreen("Travel")} color="secondary"className="Back"> Back </Button>
         </center>

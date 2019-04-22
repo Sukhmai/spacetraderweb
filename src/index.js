@@ -53,6 +53,30 @@ class Index extends Component {
             });
         });
     }
+
+    loadPlayer = () => {
+        const itemsRef = firebase.database().ref('players');
+        itemsRef.on('value', (snapshot) => {
+            let players = snapshot.val();
+            let player;
+            for (let p in players) {
+                player = {
+                    id: p,
+                    name: players[p].name,
+                    difficulty: players[p].difficulty,
+                    skills: players[p].skills,
+                    cargoSize: players[p].cargoSize,
+                    cargo: players[p].cargo,
+                    fuel: players[p].fuel,
+                    credits: players[p].credits,
+                    location: players[p].location
+                };
+            }
+            this.setState({
+              player: player,
+            });
+        });
+    }
     createPlayer = (name, difficulty, skills) => {
         const itemsRef = firebase.database().ref('players');
         let player = {
@@ -96,6 +120,23 @@ class Index extends Component {
             credits: this.state.player.credits,
             location: this.state.player.location
         });
+    }
+
+    updatePlayer = (player) => {
+        if (player.cargo === undefined) {
+            player.cargo = [];
+        }
+        firebase.database().ref('players/' + player.id).set({
+            name: player.name,
+            difficulty: player.difficulty,
+            skills: player.skills,
+            cargoSize: player.cargoSize,
+            cargo: player.cargo,
+            fuel: player.fuel,
+            credits: player.credits,
+            location: player.location
+        });
+        this.loadPlayer();
     }
 
   generatePlanet(name, x, y) {
@@ -145,6 +186,9 @@ class Index extends Component {
     }
 
     setCargo = (cargo) => {
+        if (cargo === undefined) {
+            cargo = [];
+        }
         let p = this.state.player;
         p.cargo = cargo;
         this.setState({player: p});
@@ -195,11 +239,16 @@ class Index extends Component {
 
   addItem(item, credits) {
     let player = this.state.player;
-    player.cargo.push(item);
+    let c = [];
+    if (player.cargo !== undefined) {
+        player.cargo.push(item);
+    } else {
+        c.push(item);
+        player.cargo = c;
+    }
+
     player.credits = player.credits - credits;
-    this.setState({
-      player: player
-    });
+    this.updatePlayer(player);
   }
 
   removeItem(item, credits) {
@@ -230,7 +279,7 @@ class Index extends Component {
         <App startGame={() => this.startGame()}
             player={this.state.player}
             createPlayer={this.createPlayer}
-            modifyPlayerDetails={this.modifyPlayerDetails}/>
+            updatePlayer={this.updatePlayer}/>
       )
     } else if (this.state.screen === "Marketplace") {
       return (
