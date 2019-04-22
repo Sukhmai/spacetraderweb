@@ -5,22 +5,23 @@ import App from './App';
 import Marketplace from './Marketplace';
 import Travel from './Travel';
 import Universe from './Universe';
-
+import firebase from './firebase';
 
 class Index extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      player: {
-        cargoSize: 5,
-        cargo: [{item: {
-          "name": "Gas",
-          "price": 43
-        }}],
-        fuel: 500,
-        credits: 200
-      },
+        player: null,
+      // player: {
+      //   cargoSize: 5,
+      //   cargo: [{item: {
+      //     "name": "Gas",
+      //     "price": 43
+      //   }}],
+      //   fuel: 500,
+      //   credits: 200
+      // },
       location: "Axion",
       screen: "App",
       planets: this.generatePlanets(),
@@ -28,6 +29,64 @@ class Index extends Component {
       techLevel: 0
     }
   }
+
+    componentDidMount() {
+        const itemsRef = firebase.database().ref('players');
+        itemsRef.on('value', (snapshot) => {
+            let players = snapshot.val();
+            let player;
+            for (let p in players) {
+                player = {
+                    id: p,
+                    name: players[p].name,
+                    difficulty: players[p].difficulty,
+                    skills: players[p].skills,
+                    cargoSize: players[p].cargoSize,
+                    cargo: players[p].cargo,
+                    fuel: players[p].fuel,
+                    credits: players[p].credits,
+                    location: players[p].location
+                };
+            }
+            this.setState({
+              player: player,
+              location: player.location
+            });
+        });
+    }
+    createPlayer = (name, difficulty, skills) => {
+        const itemsRef = firebase.database().ref('players');
+        let player = {
+            name: name,
+            difficulty: difficulty,
+            skills: skills,
+            cargoSize: 5,
+            cargo: [{item: {
+              "name": "Gas",
+              "price": 43
+            }}],
+            fuel: 500,
+            credits: 200,
+            location: "Axion"
+        }
+
+        itemsRef.push(player);
+    }
+
+    modifyPlayer = (location) => {
+        // event.preventDefault();
+        console.log(location);
+        firebase.database().ref('players/' + this.state.player.id).set({
+            name: this.state.player.name,
+            difficulty: this.state.player.difficulty,
+            skills: this.state.player.skills,
+            cargoSize: this.state.player.cargoSize,
+            cargo: this.state.player.cargo !== undefined ? this.state.player.cargo : [],
+            fuel: this.state.player.fuel,
+            credits: this.state.player.credits,
+            location: location
+        });
+    }
 
   generatePlanet(name, x, y) {
     return {
@@ -138,9 +197,10 @@ class Index extends Component {
   }
 
   render() {
+      console.log(this.state.player);
     if (this.state.screen === "App") {
       return(
-        <App startGame={() => this.startGame()}/>
+        <App startGame={() => this.startGame()} player={this.state.player} createPlayer={this.createPlayer}/>
       )
     } else if (this.state.screen === "Marketplace") {
       return (
@@ -163,6 +223,7 @@ class Index extends Component {
       return (
         <Universe
           changeScreen={(newScreen) => this.changeScreen(newScreen)}
+          modifyPlayer={this.modifyPlayer}
           player={this.state.player}
           planets={this.state.planets}
           events={this.state.events}

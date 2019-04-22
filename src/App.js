@@ -16,8 +16,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty : "Beginner",
-      skills: [0, 0, 0, 0],
+      difficulty : this.props.player === null ? "Beginner" : this.props.player.difficulty,
+      skills: this.props.player === null ? [0, 0, 0, 0] : this.props.player.skills,
+      name: this.props.player === null ? '' : this.props.player.name,
       open: false
     }
   }
@@ -28,7 +29,8 @@ class App extends Component {
       totalSkills += parseInt(this.state.skills[i], 10);
     }
     if (totalSkills === 16) {
-      this.props.startGame();
+        this.props.createPlayer(this.state.name, this.state.difficulty, this.state.skills);
+        this.props.startGame();
     } else {
       this.setState({
         open: true
@@ -57,6 +59,7 @@ class App extends Component {
   };
 
   render() {
+      // console.log(this.props.player.name);
     return (
       <div>
       <center>

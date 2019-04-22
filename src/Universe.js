@@ -62,6 +62,7 @@ class Universe extends Component {
             this.props.setFuel(parseInt(this.props.player.fuel) - parseInt(this.state.fuel));
             this.setState({distance: 0, fuel: 0});
             this.props.setLocation(this.state.destination);
+            this.props.modifyPlayer(this.state.destination);
         } else {
             this.setState({encounterTitle: "Not Enough Fuel!"});
             this.setState({encounterDescription: ''});
