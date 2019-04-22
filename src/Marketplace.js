@@ -16,6 +16,7 @@ class Marketplace extends Component {
   }
 
   componentWillMount() {
+    console.log(this.props.player);
     this.setState({
       buyItem: this.state.items[0],
       sellItem: this.props.player.cargo !== [] ? this.props.player.cargo[0] : []

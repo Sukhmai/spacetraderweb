@@ -58,13 +58,13 @@ class App extends Component {
         });
     }
 
-  handleStart() {
+  handleStart(load) {
     let totalSkills = 0;
     for (var i = 0; i < this.state.skills.length; i++) {
       totalSkills += parseInt(this.state.skills[i], 10);
     }
     if (totalSkills === 16) {
-        if (this.state.player !== undefined) {
+        if (load) {
             this.props.modifyPlayerDetails(this.state.name, this.state.difficulty, this.state.skills);
         } else {
             this.props.createPlayer(this.state.name, this.state.difficulty, this.state.skills);
@@ -135,7 +135,8 @@ class App extends Component {
             </FormControl>
           </div>
           <center>
-          <Button variant="contained" onClick={() => this.handleStart()} color="secondary"className="Go"> Go </Button>
+          <Button variant="contained" onClick={() => this.handleStart(false)} color="secondary"className="Go"> New Game </Button>
+          <Button variant="contained" onClick={() => this.handleStart(true)} color="secondary"className="Go"> Load Game </Button>
           </center>
         </div>
       </center>
