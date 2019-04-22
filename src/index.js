@@ -88,7 +88,7 @@ class Index extends Component {
               "name": "Gas",
               "price": 43
             }}],
-            fuel: 2000,
+            fuel: 500,
             credits: 200,
             location: "Axion"
         }
@@ -246,16 +246,8 @@ class Index extends Component {
         c.push(item);
         player.cargo = c;
     }
-
     player.credits = player.credits - credits;
-<<<<<<< HEAD
     this.updatePlayer(player);
-=======
-    this.setState({
-      player: player
-    });
-    this.modifyPlayer(this.state.location);
->>>>>>> f9f0e5bb7b840d34d5ee227ede5bddc8fcb2c1cf
   }
 
   removeItem(item, credits) {
@@ -265,7 +257,6 @@ class Index extends Component {
     this.setState({
       player: player
     });
-    this.modifyPlayer(this.state.location);
   }
 
   startGame() {
@@ -297,7 +288,6 @@ class Index extends Component {
           addItem={(item, credits) => this.addItem(item, credits)}
           sellItem={(item, credits) => this.removeItem(item, credits)}
           changeScreen={(newScreen) => this.changeScreen(newScreen)}
-          setCargo={this.setCargo}
         />
       )
     } else if (this.state.screen === "Travel") {
