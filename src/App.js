@@ -78,22 +78,31 @@ class App extends Component {
         });
     }
 
+<<<<<<< HEAD
     toggleLoadGame = () => {
         this.setState({loadGame: !this.state.loadGame});
     }
 
   handleStart() {
+=======
+  handleStart(load) {
+>>>>>>> f9f0e5bb7b840d34d5ee227ede5bddc8fcb2c1cf
     let totalSkills = 0;
     for (var i = 0; i < this.state.skills.length; i++) {
       totalSkills += parseInt(this.state.skills[i], 10);
     }
     if (totalSkills === 16) {
+<<<<<<< HEAD
         if (this.state.player !== undefined && this.state.player !== null) {
             let p = this.state.player;
             p.name = this.state.name;
             p.difficulty = this.state.difficulty;
             p.skills = this.state.skills;
             this.props.updatePlayer(p);
+=======
+        if (load) {
+            this.props.modifyPlayerDetails(this.state.name, this.state.difficulty, this.state.skills);
+>>>>>>> f9f0e5bb7b840d34d5ee227ede5bddc8fcb2c1cf
         } else {
             this.props.createPlayer(this.state.name, this.state.difficulty, this.state.skills);
         }
@@ -135,6 +144,7 @@ class App extends Component {
       <center>
         <div className="App">
           <h1> SpaceTrader </h1>
+<<<<<<< HEAD
             { this.state.player === null ?
                 <center>
                     <Button variant="contained" onClick={() => this.toggleLoadGame()} color="secondary">{ this.state.loadGame ? "Back" : "Load Game"} </Button>
@@ -194,6 +204,43 @@ class App extends Component {
                 </div>
             }
 
+=======
+              <div className="fields">
+              <TextField label={this.state.player === undefined ? "Name" : ''} value={this.state.name} variant="outlined" className="textField" onChange={this.handleNameChange}/>
+              </div>
+              <div className ="fields">
+              <TextField label={this.state.player === undefined ? "Pilot Points" : ''} value={this.state.skills[0]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(0, e)}/>
+              </div>
+              <div className ="fields">
+              <TextField label={this.state.player === undefined ? "Fighter Points" : ''} value={this.state.skills[1]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(1, e)}/>
+              </div>
+              <div className ="fields">
+              <TextField label={this.state.player === undefined ? "Trader Points" : ''} value={this.state.skills[2]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(2, e)}/>
+              </div>
+              <div className ="fields">
+              <TextField label={this.state.player === undefined ? "Engineer Points" : ''} value={this.state.skills[3]} variant="outlined" className="textField" onChange={(e) => this.handleSkillChange(3, e)}/>
+              </div>
+          <div>
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="Gender"
+                name="gender1"
+                value={this.state.difficulty}
+                onChange={this.handleDifficultyChange}
+              >
+                <FormControlLabel value="Beginner" control={<Radio />} label="Beginner" />
+                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
+                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
+                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
+                <FormControlLabel value="Impossible" control={<Radio />} label="Impossible" />
+              </RadioGroup>
+            </FormControl>
+          </div>
+          <center>
+          <Button variant="contained" onClick={() => this.handleStart(false)} color="secondary"className="Go"> New Game </Button>
+          <Button variant="contained" onClick={() => this.handleStart(true)} color="secondary"className="Go"> Load Game </Button>
+          </center>
+>>>>>>> f9f0e5bb7b840d34d5ee227ede5bddc8fcb2c1cf
         </div>
       </center>
       <div>
