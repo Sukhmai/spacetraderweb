@@ -18,7 +18,7 @@ class Marketplace extends Component {
   componentWillMount() {
     this.setState({
       buyItem: this.state.items[0],
-      sellItem: this.props.player.cargo[0]
+      sellItem: this.props.player.cargo !== [] ? this.props.player.cargo[0] : []
     });
   }
 
@@ -96,6 +96,7 @@ class Marketplace extends Component {
   }
 
   render() {
+      console.log(this.state.sellItem);
     return (
       <center>
         <div className="Marketplace">
@@ -118,17 +119,24 @@ class Marketplace extends Component {
           <span className="spans"> Price : {this.state.buyItem.item.price} </span>
           </div>
           <div className="items">
-            <span className="spans"> Sell Items: </span> <Select
-              value = {this.state.sellItem.item.name}
-              onChange = {(e) => this.handleSellItemChange(e)}
-              >
-              {this.props.player.cargo.map(name => (
-                  <MenuItem key={name.item.name} value={name.item.name}>
-                    {name.item.name}
-                  </MenuItem>
-                ))}
-            </Select>
-            <span className="spans"> Price : {this.state.sellItem.item.price} </span>
+
+            { this.state.sellItem !== undefined ?
+                <div>
+                    <span className="spans"> Sell Items: </span> <Select
+                      value = {this.state.sellItem.item.name}
+                      onChange = {(e) => this.handleSellItemChange(e)}
+                      >
+                      {this.props.player.cargo.map(name => (
+                          <MenuItem key={name.item.name} value={name.item.name}>
+                            {name.item.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                    <span className="spans"> Price : {this.state.sellItem.item.price} </span>
+                </div>
+                :
+                <span> No items to sell! </span>
+            }
           </div>
           <Button className="marketButtons" variant="contained" onClick={() => this.handleBuyItem()} color="primary"className="Go"> Buy Item </Button>
           <Button className="marketButtons" variant="contained" onClick={() => this.handleSellItem()} color="primary"className="Go"> Sell Item </Button>

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import Marketplace from './Marketplace';
 import Travel from './Travel';
+import Universe from './Universe';
 
 
 class Index extends Component {
@@ -23,6 +24,7 @@ class Index extends Component {
       location: "Axion",
       screen: "App",
       planets: this.generatePlanets(),
+      events: this.generateEvents(),
       techLevel: 0
     }
   }
@@ -54,6 +56,45 @@ class Index extends Component {
       this.generatePlanet("Shyla", 34, 63)
     ]
   }
+
+    generateEvent(title, description) {
+        return {
+            event: {
+              "title": title,
+              "description": description
+            }
+        }
+    }
+
+    generateEvents() {
+        return [
+            this.generateEvent("Pirate boards your ship", "A pirate boarded your ship and managed to steal an item from your cargo."),
+            this.generateEvent("Incoming Asteroid", "An asteroid is heading towards you, so you maneuver and lose some extra fuel"),
+            this.generateEvent("Pirate Chase", "A pirate ship is attempting to board your ship. You spend more fuel to evade them"),
+            this.generateEvent("Asteroid Belt","You encounter an asteroid belt. Your ship gets severely damaged causing you to lose cargo and fuel")
+        ]
+    }
+
+    setCargo = (cargo) => {
+        let p = this.state.player;
+        p.cargo = cargo;
+        this.setState({player: p});
+    }
+
+    setFuel = (fuel) => {
+        let p = this.state.player;
+        p.fuel = fuel;
+        this.setState({player: p});
+    }
+
+    setLocation = (location) => {
+        this.setState({location: location});
+        this.state.planets.forEach((element) => {
+            if (element.planet.name === location) {
+                this.setState({techLevel: element.planet.tech});
+            }
+        })
+    }
 
   setTechLevel() {
     for (var i = 0; i < this.state.planets.length; i++) {
@@ -115,6 +156,20 @@ class Index extends Component {
       return (
         <Travel
           changeScreen={(newScreen) => this.changeScreen(newScreen)}
+          player={this.state.player}
+        />
+      )
+    } else if (this.state.screen === "Universe") {
+      return (
+        <Universe
+          changeScreen={(newScreen) => this.changeScreen(newScreen)}
+          player={this.state.player}
+          planets={this.state.planets}
+          events={this.state.events}
+          setCargo={this.setCargo}
+          setFuel={this.setFuel}
+          setLocation={this.setLocation}
+          location={this.state.location}
         />
       )
     }
